@@ -8,10 +8,9 @@ class Files {
 
     public static function getInstance($dir)
     {
-        if (null === self::$instance)
-        {
-            self::$instance = new self($dir);
-        }
+        if (is_null(self::$instance)) {
+            self::$instance = new static($dir);
+        };
         return self::$instance;
     }
 
@@ -19,14 +18,14 @@ class Files {
 
     private function __construct($dir)
     {
-        $this->files = $this->get_directory($dir);
+        $this->files = $this->getDirectory($dir);
     }
 
-    private function get_directory($dir)
+    public function getDirectory($dir)
     {
         $files = array();
 
-        if ($dir[strlen($dir)-1] !== '/') $dir .= '\\';
+        if ($dir[strlen($dir)-1] !== '/') $dir .= '/';
 
         if ($handle = opendir($dir)) {
             while (false !== ($entry = readdir($handle))) {
@@ -40,8 +39,8 @@ class Files {
                     $files[] = $temp;
                 }
             }
-            closedir($handle);
         }
+        closedir($handle);
         return $files;
     }
 

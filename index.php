@@ -16,14 +16,7 @@
             $files = $filemanager->sort($files, $sort, $order);
         }
 
-        if (isset($_GET['to']))
-        {
-            $path = $_GET['to'];
-        }
-        else
-        {
-            $path = dirname(__FILE__);
-        }
+        isset($_GET['to']) ? $path = $_GET['to'] : $path = dirname(__FILE__);
     ?>
   <title>My File Manager</title>
 </head>
@@ -67,25 +60,25 @@
               <tr>
                   <td>
                       <?php
-                      if ($file['type'] === 'dir')
-                      {
-                          echo "<a href=".$_SERVER['PHP_SELF'].'?to='.$path.'\\'.$file['name'].">".$file['name']."</a>";
-                      }
-                      else
-                      {
-                          echo $file['name'];
-                      }
+                          if ($file['type'] === 'dir')
+                          {
+                              echo "<a href=".$_SERVER['PHP_SELF'].'?to='.$path.'/'.$file['name'].">".$file['name']."</a>";
+                          }
+                          else
+                          {
+                              echo $file['name'];
+                          }
                       ?>
                   </td>
                   <td>
                       <?php
-                      if($file['type'] === 'dir') {
-                          echo $file['type'];
-                      }
-                      else
-                      {
-                          echo $file['extension'];
-                      }
+                          if($file['type'] === 'dir') {
+                              echo $file['type'];
+                          }
+                          else
+                          {
+                              echo $file['extension'];
+                          }
                       ?>
                   </td>
                   <td><?php echo $file['size'].' kB'; ?></td>
