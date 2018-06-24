@@ -3,23 +3,17 @@
 <head>
     <meta charset="UTF-8">
         <?php
-            require('fm.php');
-
-            isset($_GET['to']) ? $to = $_GET['to'] : $to = getcwd();
-            isset($_GET['sort']) ? $sort = $_GET['sort'] : $sort = 'name';
-            isset($_GET['order']) ? $order = $_GET['order'] : $order = 'asc';
-
-            $filemanager = Files::getInstance($to);
-            $files = $filemanager->files;
-
-            if (isset($_GET['sort']) && isset($_GET['order'])) {
-                $files = $filemanager->sort($files, $sort, $order);
-            }
-
-            isset($_GET['to']) ? $path = $_GET['to'] : $path = dirname(__FILE__);
+           require('settings.php');
         ?>
     <title>My File Manager for Opinion Corp</title>
     <style>
+        h1 {
+            color: #424242;
+        }
+        .wrapper {
+            text-align: center;
+            margin: auto;
+        }
         select {
             height: 25px;
         }
@@ -37,6 +31,7 @@
             background: #212121;
         }
         table {
+            margin: auto;
             margin-top: 20px;
             border-collapse: collapse;
             border-left: 3px solid #424242;
@@ -80,7 +75,6 @@
         table tr td a {
             text-decoration: none;
             color: #212121;
-            font-weight: bold;
         }
         p a {
             text-decoration: none;
@@ -99,70 +93,73 @@
     </style>
 </head>
 <body>
-    <form method="get" action="">
-        <select name="sort" required>
-            <option value="name">Name</option>
-            <option value="type">Type</option>
-            <option value="size">Size</option>
-        </select>
-        <select name="order" required>
-            <option value="asc">ascending</option>
-            <option value="desc">descending</option>
-        </select>
-        <input type="hidden" name="to" value="<?php echo $to ?>">
-        <input type="submit" value="Sort" class="btn">
-    </form>
-
-    <table>
-        <?php if ($files == null) { ?>
-            <p>folder empty...</p>
-        <?php }
-        else { ?>
+    <div class="wrapper">
+        <h1>File Manager</h1>
+        <form method="get" action="">
+            <select name="sort" required>
+                <option value="name">Name</option>
+                <option value="type">Type</option>
+                <option value="size">Size</option>
+            </select>
+            <select name="order" required>
+                <option value="asc">ascending</option>
+                <option value="desc">descending</option>
+            </select>
+            <input type="hidden" name="to" value="<?php echo $to ?>">
+            <input type="submit" value="Sort" class="btn">
+        </form>
+        <p>touch to open file or directory</p>
+        <table>
+            <?php if ($files == null) { ?>
+                <p>folder empty...</p>
+            <?php }
+            else { ?>
             <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Size</th>
-                </tr>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Size</th>
+            </tr>
             </thead>
-          <tbody>
-          <?php foreach($files as $file): ?>
-              <tr>
-                  <td>
-                      <?php
-                          if ($file['type'] === 'dir')
-                          {
-                              echo "<a href=".$_SERVER['PHP_SELF'].'?to='.$path.'/'.$file['name'].">".$file['name']."</a>";
-                          }
-                          else
-                          {
-                              echo $file['name'];
-                          }
-                      ?>
-                  </td>
-                  <td>
-                      <?php
-                          if($file['type'] === 'dir') {
-                              echo $file['type'];
-                          }
-                          else
-                          {
-                              echo $file['extension'];
-                          }
-                      ?>
-                  </td>
-                  <td><?php echo $file['size'].' kB'; ?></td>
-              </tr>
-          <?php endforeach; }?>
-           </tbody>
-    </table>
-    <p>
-        <?php
-        if ($path !== dirname(__FILE__))
-        {
-            $back = $_SERVER['PHP_SELF']."?to=".realpath($_GET['to'].'/../');
-            echo "<a href=".$back.">&larr; back</a>";
-        } ?>
-    </p>
+            <tbody>
+            <?php foreach($files as $file): ?>
+                <tr>
+                    <td>
+                        <?php
+                        if ($file['type'] === 'dir')
+                        {
+                            echo "<a href=".$_SERVER['PHP_SELF'].'?to='.$path.'/'.$file['name']." style='font-weight: bolder;'>".$file['name']."</a>";
+                        }
+                        else
+                        {
+                            echo "<a href='open.php?to=".$path."&file=".$file['name'].'.'.$file['extension']."'>".$file['name']."</a>";
+                        }
+                        ?>
+                    </td>
+                    <td>
+                        <?php
+                        if($file['type'] === 'dir') {
+                            echo $file['type'];
+                        }
+                        else
+                        {
+                            echo $file['extension'];
+                        }
+                        ?>
+                    </td>
+                    <td><?php echo $file['size'].' kB'; ?></td>
+                </tr>
+            <?php endforeach; }?>
+            </tbody>
+        </table>
+        <p>
+            <?php
+            if ($path !== dirname(__FILE__))
+            {
+                $back = $_SERVER['PHP_SELF']."?to=".realpath($_GET['to'].'/../');
+                echo "<a href=".$back.">&larr; back</a>";
+            } ?>
+        </p>
+    </div>
 </body>
 </html>

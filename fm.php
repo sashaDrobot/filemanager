@@ -59,7 +59,3 @@ class Files {
         return $data;
     }
 }
-
-
-
-
